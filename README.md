@@ -1,289 +1,302 @@
-# 💰 Investment Compound Calculator
+# Investment Compound Calculator
 
-A modern, feature-rich web-based investment calculator built with **React**, **TypeScript**, and **Webpack**. Calculate your investment growth over time with support for monthly contributions, pause periods, and withdrawals using compound interest calculations.
+A comprehensive React + TypeScript investment calculator with interactive charting capabilities. Plan your financial future by modeling different investment periods including contributions, pauses, and withdrawals with compound interest calculations.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.1+-blue.svg)
-![React](https://img.shields.io/badge/React-18.2+-61dafb.svg)
+## 🚀 Features
 
-## ✨ Features
-
-### 📊 Flexible Investment Planning
-- **Monthly Contributions**: Add regular investments during specified periods
+- **Multiple Investment Periods**: Define different time periods with varying behaviors
+- **Monthly Contributions**: Add regular monthly investments to your portfolio
 - **Pause Periods**: Let your investments grow without new contributions
-- **Withdrawal Periods**: Plan for regular withdrawals while remaining balance continues to grow
-- **Multiple Periods**: Chain different period types to create complex investment scenarios
+- **Withdrawal Periods**: Plan regular withdrawals while your remaining balance continues to earn interest
+- **Compound Interest Calculations**: Accurate monthly compounding with configurable annual interest rate
+- **Interactive Chart**: Visualize your investment growth over time with clickable data points
+- **Real-time Updates**: Chart and calculations update automatically as you change inputs
+- **Month-by-Month Details**: Click any point on the chart to see detailed information for that specific month
+- **Responsive Design**: Works beautifully on desktop, tablet, and mobile devices
 
-### 🧮 Accurate Calculations
-- Compound interest calculations with configurable annual interest rate
-- Monthly compounding frequency
-- Detailed month-by-month breakdown
-- Complete financial summary with totals
+## 📋 Prerequisites
 
-### 🎨 Clean User Interface
-- Intuitive, modern design
-- Responsive layout (mobile-friendly)
-- Real-time calculations
-- Easy period management (add/remove)
-- Optional monthly breakdown table
+- Node.js (v14 or higher)
+- npm or yarn package manager
 
-### 💻 Technical Features
-- Built with React 18 and TypeScript for type safety
-- Webpack bundler for optimized production builds
-- Hot Module Replacement for fast development
-- Well-documented, maintainable code
-- Modern ES2020+ JavaScript features
+## 🛠️ Installation
 
-## 🚀 Quick Start
+1. Clone the repository:
+```bash
+git clone https://github.com/WavyWare/investment-compound-calculator.git
+cd investment-compound-calculator
+```
 
-### Prerequisites
+2. Install dependencies:
+```bash
+npm install
+```
 
-- **Node.js** 16+ (with npm)
-- Git
+## 🚀 Running the Application
 
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/WavyWare/investment-compound-calculator.git
-   cd investment-compound-calculator
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server:**
-   ```bash
-   npm start
-   ```
-
-   The application will automatically open in your browser at `http://localhost:3000`
+### Development Mode
+Start the development server with hot reloading:
+```bash
+npm start
+```
+The application will open automatically at `http://localhost:3000`
 
 ### Build for Production
-
-To create an optimized production build:
-
+Create an optimized production build:
 ```bash
-npm run build
+npm build
+```
+The built files will be in the `dist/` directory.
+
+### Development with Watch Mode
+Build in development mode and watch for changes:
+```bash
+npm run dev
 ```
 
-The production-ready files will be in the `dist/` directory.
+## 📁 Project Structure
 
-### Type Checking
-
-To run TypeScript type checking:
-
-```bash
-npm run type-check
-```
-
-## 📖 How to Use
-
-### 1. Set Investment Parameters
-
-- **Initial Investment Amount**: Enter your starting capital (e.g., 10,000 PLN)
-- **Annual Interest Rate**: Set expected annual return percentage (e.g., 5%)
-
-### 2. Add Investment Periods
-
-Create your investment timeline by adding different period types:
-
-#### 📈 Monthly Contribution Period
-- Regular monthly investments
-- Example: Contribute 500 PLN/month for 60 months (5 years)
-
-#### ⏸️ Pause Period
-- No new contributions, but existing balance continues to grow
-- Example: Pause for 12 months while traveling
-
-#### 📉 Monthly Withdrawal Period
-- Regular withdrawals from your investment
-- Remaining balance continues to earn interest
-- Example: Withdraw 1,000 PLN/month for 120 months (retirement)
-
-Each period can have:
-- **Duration**: Number of months
-- **Amount**: Monthly contribution or withdrawal (not applicable for pause)
-- **Label**: Optional description for easy reference
-
-### 3. Calculate Results
-
-Click **"Calculate Investment Growth"** to see:
-
-- **Final Balance**: Total value at the end
-- **Total Contributions**: All money you invested
-- **Total Withdrawals**: All money you withdrew
-- **Interest Earned**: Profit from compound interest
-- **Net Profit**: Total gain (interest earned minus net contributions)
-- **Total Duration**: Investment timeframe in months and years
-
-### 4. View Monthly Breakdown
-
-Toggle the **"Show Monthly Breakdown"** button to see detailed month-by-month data:
-- Balance after each month
-- Cumulative contributions and withdrawals
-- Interest earned over time
-- Period labels for context
-
-## 💡 Usage Examples
-
-### Example 1: Simple Long-Term Investment
-
-**Scenario**: Start with 10,000 PLN, add 500 PLN monthly for 20 years at 6% annual interest
-
-1. Set Initial Amount: `10,000`
-2. Set Interest Rate: `6`
-3. Add Period:
-   - Type: Monthly Contribution
-   - Duration: `240` months
-   - Amount: `500` PLN/month
-   - Label: "Long-term growth"
-4. Click Calculate
-
-**Result**: See how your investment grows to over 230,000 PLN!
-
-### Example 2: Career Planning (Multi-Phase)
-
-**Scenario**: Model a complete financial lifecycle
-
-**Phase 1 - Early Career** (10 years):
-- Type: Monthly Contribution
-- Duration: 120 months
-- Amount: 300 PLN/month
-- Label: "Early career savings"
-
-**Phase 2 - Mid Career** (15 years):
-- Type: Monthly Contribution
-- Duration: 180 months
-- Amount: 800 PLN/month
-- Label: "Higher income period"
-
-**Phase 3 - Pre-Retirement Pause** (5 years):
-- Type: Pause
-- Duration: 60 months
-- Label: "Let it grow"
-
-**Phase 4 - Retirement** (20 years):
-- Type: Monthly Withdrawal
-- Duration: 240 months
-- Amount: 2,000 PLN/month
-- Label: "Retirement income"
-
-This shows if your savings strategy can sustain your retirement!
-
-### Example 3: Emergency Fund Break
-
-**Scenario**: Pause contributions during financial hardship
-
-1. Contribution period: 500 PLN/month for 36 months
-2. Pause period: 12 months (difficult year)
-3. Contribution period: 500 PLN/month for 60 months (back on track)
-
-See how the pause affects your final balance.
-
-## 🏗️ Project Structure
+Due to GitHub API rate limits, please create the following file structure manually. I've started the repository with the basic configuration files. Here's the complete structure:
 
 ```
 investment-compound-calculator/
 ├── public/
-│   └── index.html              # HTML template
+│   └── index.html
 ├── src/
 │   ├── components/
-│   │   └── Calculator.tsx      # Main calculator component
-│   ├── types/
-│   │   └── investment.ts       # TypeScript interfaces and types
-│   ├── utils/
-│   │   └── calculations.ts     # Calculation logic and utilities
+│   │   ├── Calculator.tsx
+│   │   ├── InvestmentChart.tsx
+│   │   ├── PeriodCard.tsx
+│   │   └── ResultsSummary.tsx
 │   ├── styles/
-│   │   └── main.css            # Global styles
-│   ├── App.tsx                 # Root application component
-│   └── index.tsx               # Application entry point
-├── .gitignore                  # Git ignore rules
-├── package.json                # Project dependencies and scripts
-├── tsconfig.json               # TypeScript configuration
-├── webpack.config.js           # Webpack bundler configuration
-└── README.md                   # This file
+│   │   ├── global.css
+│   │   ├── App.css
+│   │   ├── Calculator.css
+│   │   └── Chart.css
+│   ├── types/
+│   │   └── index.ts
+│   ├── utils/
+│   │   └── calculations.ts
+│   ├── App.tsx
+│   └── index.tsx
+├── .gitignore
+├── package.json (✓ Already added)
+├── tsconfig.json
+├── webpack.config.js (✓ Already added)
+└── README.md
 ```
 
-## 🛠️ Technology Stack
+## 💻 Missing Files to Add
 
-- **React 18.2** - UI library
-- **TypeScript 5.1** - Type-safe JavaScript
-- **Webpack 5** - Module bundler
-- **CSS3** - Styling with modern features
-- **HTML5** - Semantic markup
+I've successfully added `package.json` and `webpack.config.js`. Due to API rate limits, you'll need to add the remaining files. Here's a summary:
 
-## 🔧 Development
+### Configuration Files Needed:
+1. **tsconfig.json** - TypeScript configuration
+2. **.gitignore** - Git ignore rules
+3. **public/index.html** - HTML template
 
-### Available Scripts
+### Source Files Needed:
+1. **src/index.tsx** - Application entry point
+2. **src/App.tsx** - Main application component
+3. **src/types/index.ts** - TypeScript type definitions
+4. **src/utils/calculations.ts** - Investment calculation logic
+5. **src/components/Calculator.tsx** - Calculator component
+6. **src/components/InvestmentChart.tsx** - Chart component with Chart.js
+7. **src/components/PeriodCard.tsx** - Period configuration card
+8. **src/components/ResultsSummary.tsx** - Results display component
+9. **src/styles/global.css** - Global styles
+10. **src/styles/App.css** - App-specific styles
+11. **src/styles/Calculator.css** - Calculator styles
+12. **src/styles/Chart.css** - Chart styles
 
-- `npm start` - Start development server with hot reloading
-- `npm run build` - Create production build
-- `npm run type-check` - Run TypeScript compiler checks
+## 🎯 How to Use the Calculator
 
-### Code Organization
+### 1. Set Initial Parameters
+- **Initial Balance**: Your starting investment amount (default: 0 PLN)
+- **Annual Interest Rate**: Expected annual return rate (default: 7%)
 
-- **Components**: Reusable React components with TypeScript
-- **Types**: Centralized TypeScript interfaces and enums
-- **Utils**: Pure functions for calculations and formatting
-- **Styles**: Global CSS with responsive design
+### 2. Define Investment Periods
 
-### Key Files
+Click "Add Period" to create periods. Each period can be configured with:
 
-- **Calculator.tsx**: Main UI component with form handling and state management
-- **calculations.ts**: Core compound interest calculation algorithm
-- **investment.ts**: TypeScript type definitions for type safety
+#### Period Types:
+
+**Monthly Contribution**
+- Regular deposits into your investment
+- Specify the monthly amount (e.g., 500 PLN)
+- Set duration in months
+
+**Pause (No Contributions)**
+- Let your money grow without new deposits
+- Existing balance continues to earn compound interest
+- Set duration in months
+
+**Monthly Withdrawal**
+- Regular withdrawals from your investment
+- Specify monthly withdrawal amount
+- Remaining balance continues to earn interest
+- Set duration in months
+
+### 3. View Results
+
+The application automatically calculates and displays:
+
+#### Summary Cards:
+- **Total Contributions**: Sum of all deposits made
+- **Total Withdrawals**: Sum of all withdrawals taken
+- **Total Interest Earned**: Compound interest accumulated
+- **Final Balance**: Your ending investment value
+
+#### Interactive Chart:
+- Visual representation of balance growth over time
+- Color-coded by period type
+- **Click any data point** to see detailed information for that specific month
+
+#### Period-by-Period Breakdown:
+- Starting and ending balance for each period
+- Contributions or withdrawals made
+- Interest earned during the period
+- Visual progression of your investment
+
+## 📊 Example Scenarios
+
+### Scenario 1: Wealth Building
+```
+Initial Balance: 10,000 PLN
+Annual Rate: 7%
+
+Period 1: Monthly Contribution
+- Amount: 500 PLN/month
+- Duration: 60 months (5 years)
+
+Period 2: Pause
+- Duration: 120 months (10 years)
+```
+See how your initial investment plus 5 years of contributions grows over the next 10 years!
+
+### Scenario 2: Retirement Planning
+```
+Initial Balance: 500,000 PLN
+Annual Rate: 5%
+
+Period 1: Monthly Withdrawal
+- Amount: 2,500 PLN/month
+- Duration: 240 months (20 years)
+```
+Understand how long your retirement savings will last with regular withdrawals!
+
+### Scenario 3: Complete Lifecycle
+```
+Initial Balance: 0 PLN
+Annual Rate: 8%
+
+Period 1: Building Phase
+- Type: Monthly Contribution
+- Amount: 1,000 PLN/month
+- Duration: 120 months (10 years)
+
+Period 2: Growth Phase
+- Type: Pause
+- Duration: 60 months (5 years)
+
+Period 3: Usage Phase
+- Type: Monthly Withdrawal
+- Amount: 3,000 PLN/month
+- Duration: 120 months (10 years)
+```
+
+## 🔬 Technical Details
+
+### Compound Interest Formula
+
+The calculator uses monthly compounding:
+- Monthly rate = Annual rate / 12
+- Each month: Balance × (1 + monthly rate) + contribution - withdrawal
+
+### Tech Stack
+
+- **React 18**: Modern React with hooks
+- **TypeScript**: Type-safe development
+- **Webpack 5**: Module bundling and development server
+- **Chart.js**: Interactive data visualization
+- **react-chartjs-2**: React wrapper for Chart.js
+- **Babel**: JavaScript transpilation
+
+### Key Features Implementation
+
+1. **Real-time Calculations**: Uses React hooks (useEffect) to recalculate when inputs change
+2. **Interactive Chart**: Chart.js with custom onClick handlers for point selection
+3. **Type Safety**: Full TypeScript implementation with interfaces for all data structures
+4. **Responsive Design**: CSS Grid and Flexbox for adaptive layouts
+5. **Optimized Builds**: Webpack with code splitting and hash-based caching
+
+## 🎨 Customization
+
+### Change Currency
+Edit the `formatCurrency` function in `src/utils/calculations.ts`:
+```typescript
+export const formatCurrency = (amount: number): string => {
+  return `$${amount.toFixed(2)}`; // Change PLN to your currency
+};
+```
+
+### Adjust Colors
+Modify the CSS custom properties in `src/styles/global.css`:
+```css
+:root {
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  /* Add your colors */
+}
+```
+
+### Add Features
+- Export results to PDF
+- Save/load investment plans
+- Compare multiple scenarios
+- Add inflation adjustments
+- Include tax calculations
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how you can help:
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the file for details.
+This project is licensed under the MIT License - feel free to use it for personal or commercial purposes.
 
-## 👤 Author
+## ⚠️ Disclaimer
 
-**JFTech**
-
-- GitHub: [@WavyWare](https://github.com/WavyWare)
-
-## 🙏 Acknowledgments
-
-- Inspired by the need for flexible investment planning tools
-- Built with modern web technologies for optimal performance
-- Designed with user experience as top priority
+This calculator provides estimates based on the input parameters. Actual investment returns may vary significantly. Market conditions, fees, taxes, and other factors can affect real-world results. Always consult with a qualified financial advisor before making investment decisions.
 
 ## 📞 Support
 
-If you have any questions or run into issues:
+If you encounter any issues or have questions:
+- Open an issue on GitHub
+- Check existing issues for solutions
+- Review the documentation
 
-1. Check the [Usage Examples](#-usage-examples) section
-2. Review existing [Issues](https://github.com/WavyWare/investment-compound-calculator/issues)
-3. Open a new issue with details about your problem
+## 🌟 Acknowledgments
 
-## 🔮 Future Enhancements
-
-Potential features for future versions:
-
-- 📊 Interactive charts and graphs
-- 💾 Save/load investment scenarios
-- 📤 Export results to PDF or Excel
-- 🌍 Multi-currency support
-- 📱 Progressive Web App (PWA) capabilities
-- 🎯 Investment goal tracking
-- 📈 Historical performance comparison
+- Built with React and TypeScript
+- Chart visualization powered by Chart.js
+- Inspired by the need for flexible investment planning tools
 
 ---
 
-**Happy Investing! 📈💰**
+**Current Status**: Base configuration files (package.json, webpack.config.js) have been added. Due to GitHub API rate limits, additional files need to be added manually or after the rate limit resets. See the project structure above for the complete file list needed.
 
-*Remember: This calculator is for educational and planning purposes. Always consult with a financial advisor for professional investment advice.*
+**Next Steps**:
+1. Wait for GitHub API rate limit to reset
+2. Add remaining TypeScript configuration files
+3. Add source code files
+4. Add styling files
+5. Test the complete application
+
+Made with ❤️ by JFTech
