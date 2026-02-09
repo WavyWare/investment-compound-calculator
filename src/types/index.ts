@@ -4,27 +4,32 @@
 
 export type PeriodType = 'contribution' | 'pause' | 'withdrawal';
 
+/**
+ * Represents a single investment period
+ */
 export interface Period {
   id: number;
   type: PeriodType;
   duration: number; // in months
-  amount: number; // for contribution or withdrawal (0 for pause)
-  label?: string;
+  amount?: number; // for contribution or withdrawal
 }
 
+/**
+ * Data for a single month in the calculation
+ */
 export interface MonthlyData {
   month: number;
   balance: number;
   contribution: number;
   withdrawal: number;
   interest: number;
-  cumulativeContributions: number;
-  cumulativeWithdrawals: number;
-  cumulativeInterest: number;
   periodType: PeriodType;
   periodNumber: number;
 }
 
+/**
+ * Summary data for a period
+ */
 export interface PeriodSummary {
   periodNumber: number;
   type: PeriodType;
@@ -37,6 +42,9 @@ export interface PeriodSummary {
   monthlyAmount: number;
 }
 
+/**
+ * Complete calculation result
+ */
 export interface CalculationResult {
   monthlyData: MonthlyData[];
   periodSummaries: PeriodSummary[];
@@ -44,16 +52,4 @@ export interface CalculationResult {
   totalWithdrawals: number;
   totalInterest: number;
   finalBalance: number;
-}
-
-export interface ChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    borderColor: string;
-    backgroundColor: string;
-    tension: number;
-    fill: boolean;
-  }[];
 }
