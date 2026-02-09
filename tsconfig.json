@@ -15,8 +15,8 @@
     "strict": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
+    "declaration": false,
+    "outDir": "./dist",
     "baseUrl": "./src"
   },
   "include": ["src/**/*"],
