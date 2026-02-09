@@ -1,0 +1,49 @@
+/* Chart Component Styles */
+.chart-container {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 500px;
+  margin-bottom: 20px;
+}
+
+.chart-hint {
+  text-align: center;
+  color: #666;
+  font-size: 0.95rem;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.chart-hint strong {
+  color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chart-container {
+    padding: 20px;
+  }
+
+  .chart-wrapper {
+    height: 400px;
+  }
+
+  .chart-hint {
+    font-size: 0.85rem;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-wrapper {
+    height: 300px;
+  }
+}
