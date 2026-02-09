@@ -14,9 +14,8 @@ export const calculateInvestment = (
 ): CalculationResult => {
   const monthlyRate = annualRate / 100 / 12;
   let balance = initialBalance;
-  let cumulativeContributions = initialBalance;
-  let cumulativeWithdrawals = 0;
-  let cumulativeInterest = 0;
+  let totalContributions = initialBalance;
+  let totalWithdrawals = 0;
   
   const monthlyData: MonthlyData[] = [];
   const periodSummaries: PeriodSummary[] = [];
@@ -31,26 +30,25 @@ export const calculateInvestment = (
     for (let month = 1; month <= period.duration; month++) {
       currentMonth++;
       
-      // Calculate interest on current balance FIRST
+      // Calculate interest on current balance
       const monthlyInterest = balance * monthlyRate;
       balance += monthlyInterest;
       periodInterest += monthlyInterest;
-      cumulativeInterest += monthlyInterest;
 
       let contribution = 0;
       let withdrawal = 0;
 
-      // Apply monthly action based on period type AFTER interest
-      if (period.type === 'contribution') {
+      // Apply monthly action based on period type
+      if (period.type === 'contribution' && period.amount) {
         contribution = period.amount;
         balance += contribution;
         periodContributions += contribution;
-        cumulativeContributions += contribution;
-      } else if (period.type === 'withdrawal') {
+        totalContributions += contribution;
+      } else if (period.type === 'withdrawal' && period.amount) {
         withdrawal = period.amount;
-        balance = Math.max(0, balance - withdrawal); // Don't go negative
+        balance -= withdrawal;
         periodWithdrawals += withdrawal;
-        cumulativeWithdrawals += withdrawal;
+        totalWithdrawals += withdrawal;
       }
 
       // Store monthly data
@@ -60,9 +58,6 @@ export const calculateInvestment = (
         contribution,
         withdrawal,
         interest: monthlyInterest,
-        cumulativeContributions,
-        cumulativeWithdrawals,
-        cumulativeInterest,
         periodType: period.type,
         periodNumber: periodIndex + 1
       });
@@ -78,16 +73,18 @@ export const calculateInvestment = (
       totalContributions: periodContributions,
       totalWithdrawals: periodWithdrawals,
       totalInterest: periodInterest,
-      monthlyAmount: period.amount
+      monthlyAmount: period.amount || 0
     });
   });
+
+  const totalInterest = balance - totalContributions + totalWithdrawals;
 
   return {
     monthlyData,
     periodSummaries,
-    totalContributions: cumulativeContributions,
-    totalWithdrawals: cumulativeWithdrawals,
-    totalInterest: cumulativeInterest,
+    totalContributions,
+    totalWithdrawals,
+    totalInterest,
     finalBalance: Math.max(0, balance)
   };
 };
@@ -96,10 +93,7 @@ export const calculateInvestment = (
  * Format number as currency (PLN)
  */
 export const formatCurrency = (amount: number): string => {
-  return `${amount.toLocaleString('pl-PL', { 
-    minimumFractionDigits: 2, 
-    maximumFractionDigits: 2 
-  })} PLN`;
+  return `${amount.toFixed(2)} PLN`;
 };
 
 /**
@@ -110,33 +104,11 @@ export const formatPercentage = (value: number): string => {
 };
 
 /**
- * Get display label for period type
+ * Format number with thousands separator
  */
-export const getPeriodTypeLabel = (type: string): string => {
-  switch (type) {
-    case 'contribution':
-      return 'Monthly Contribution';
-    case 'pause':
-      return 'Pause Period';
-    case 'withdrawal':
-      return 'Monthly Withdrawal';
-    default:
-      return type;
-  }
-};
-
-/**
- * Get color for period type
- */
-export const getPeriodColor = (type: string): string => {
-  switch (type) {
-    case 'contribution':
-      return '#4caf50'; // Green
-    case 'pause':
-      return '#ff9800'; // Orange
-    case 'withdrawal':
-      return '#f44336'; // Red
-    default:
-      return '#667eea'; // Default purple
-  }
+export const formatNumber = (value: number): string => {
+  return new Intl.NumberFormat('pl-PL', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
 };
