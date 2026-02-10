@@ -6,6 +6,8 @@ let phases = [
     duration: 10,
     durationUnit: "years",
     rate: 7,
+    isNet: false,
+    taxRate: 19,
   },
   {
     id: 2,
@@ -14,6 +16,8 @@ let phases = [
     duration: 5,
     durationUnit: "years",
     rate: 7,
+    isNet: false,
+    taxRate: 19,
   },
   {
     id: 3,
@@ -22,6 +26,8 @@ let phases = [
     duration: 10,
     durationUnit: "years",
     rate: 5,
+    isNet: false,
+    taxRate: 19,
   },
 ];
 
@@ -70,6 +76,44 @@ function renderPhases() {
       0.1,
     );
 
+    // Advanced Tax Settings (Only for Withdrawals)
+    let taxSection = "";
+    if (phase.type === "withdraw") {
+      const isChecked = phase.isNet ? "checked" : "";
+      const taxInputVisibility = phase.isNet ? "block" : "none";
+
+      taxSection = `
+                <div class="tax-settings-container">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="form-check m-0">
+                            <input class="form-check-input" type="checkbox" id="tax-check-${index}"
+                                ${isChecked}
+                                onchange="updatePhase(${index}, 'isNet', this.checked)">
+                            <label class="form-check-label small fw-bold text-danger" for="tax-check-${index}">
+                                Withdraw as Net Amount? (Simulate Tax)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div style="display: ${taxInputVisibility}; margin-top: 10px; border-top: 1px solid #f5c6cb; padding-top: 10px;">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <label class="col-form-label col-form-label-sm small text-muted">Tax Rate (%):</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control form-control-sm"
+                                    value="${phase.taxRate}" min="0" max="100" step="0.1"
+                                    oninput="updatePhase(${index}, 'taxRate', this.value)">
+                            </div>
+                            <div class="col-auto">
+                                <span class="small text-muted">Gross amount will be adjusted.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+    }
+
     card.innerHTML = `
             <div class="d-flex justify-content-between align-items-start mb-2">
                 <div class="d-flex align-items-center flex-wrap">
@@ -89,10 +133,12 @@ function renderPhases() {
                     ${durationInput}
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label small text-muted mb-0">Rate (%)</label>
+                    <label class="form-label small text-muted mb-0">Return Rate (%)</label>
                     ${rateInput}
                 </div>
             </div>
+
+            ${taxSection}
         `;
     container.appendChild(card);
   });
@@ -149,6 +195,8 @@ function addPhase() {
     duration: 5,
     durationUnit: "years",
     rate: 6,
+    isNet: false,
+    taxRate: 19,
   });
   renderPhases();
   calculateAndDraw();
@@ -166,7 +214,15 @@ function removePhase(index) {
 
 window.updatePhase = function (index, field, value) {
   let val = value;
-  if (field === "amount" || field === "duration" || field === "rate") {
+
+  if (field === "isNet") {
+    val = value; // Boolean
+  } else if (
+    field === "amount" ||
+    field === "duration" ||
+    field === "rate" ||
+    field === "taxRate"
+  ) {
     val = parseFloat(value) || 0;
   }
 
@@ -174,8 +230,12 @@ window.updatePhase = function (index, field, value) {
 
   if (field === "type" && val === "wait") {
     phases[index].amount = 0;
+    phases[index].isNet = false;
     renderPhases();
   } else if (field === "type") {
+    renderPhases();
+  } else if (field === "isNet") {
+    // Re-render to show/hide the tax input field smoothly
     renderPhases();
   }
 
@@ -207,8 +267,22 @@ function calculateData() {
       const interest = currentBalance * monthlyRate;
       let flow = 0;
 
-      if (phase.type === "deposit") flow = phase.amount;
-      else if (phase.type === "withdraw") flow = -phase.amount;
+      if (phase.type === "deposit") {
+        flow = phase.amount;
+      } else if (phase.type === "withdraw") {
+        let withdrawalAmount = phase.amount;
+
+        // Gross = Net / (1 - TaxRate)
+        if (phase.isNet) {
+          const taxRateDecimal = phase.taxRate / 100;
+          // Prevent division by zero or negative denominator if tax is >= 100%
+          if (taxRateDecimal < 1) {
+            withdrawalAmount = phase.amount / (1 - taxRateDecimal);
+          }
+        }
+
+        flow = -withdrawalAmount;
+      }
 
       currentBalance += interest + flow;
       totalInvested += flow;
