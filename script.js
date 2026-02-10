@@ -1,6 +1,6 @@
 let phases = [
   {
-    id: 1,
+    id: "p1",
     type: "deposit",
     amount: 1000,
     duration: 10,
@@ -8,9 +8,10 @@ let phases = [
     rate: 7,
     isNet: false,
     taxRate: 19,
+    active: true,
   },
   {
-    id: 2,
+    id: "p2",
     type: "wait",
     amount: 0,
     duration: 5,
@@ -18,9 +19,10 @@ let phases = [
     rate: 7,
     isNet: false,
     taxRate: 19,
+    active: true,
   },
   {
-    id: 3,
+    id: "p3",
     type: "withdraw",
     amount: 2000,
     duration: 10,
@@ -28,6 +30,7 @@ let phases = [
     rate: 5,
     isNet: false,
     taxRate: 19,
+    active: true,
   },
 ];
 
@@ -41,6 +44,22 @@ document.addEventListener("DOMContentLoaded", () => {
     updateAgeLabels();
   });
 
+  // Initialize SortableJS for Drag and Drop
+  const el = document.getElementById("phases-container");
+  Sortable.create(el, {
+    handle: ".drag-handle", // Drag handle selector
+    animation: 150, // Smooth animation
+    onEnd: function (evt) {
+      // Reorder array based on new index
+      const item = phases.splice(evt.oldIndex, 1)[0];
+      phases.splice(evt.newIndex, 0, item);
+
+      // Re-render to ensure data-indices are correct, then update charts
+      renderPhases();
+      calculateAndDraw();
+    },
+  });
+
   renderPhases();
   calculateAndDraw();
 });
@@ -51,7 +70,10 @@ function renderPhases() {
 
   phases.forEach((phase, index) => {
     const card = document.createElement("div");
-    card.className = `card phase-card p-3 type-${phase.type}`;
+    // Add disabled class if inactive
+    const disabledClass = phase.active ? "" : "phase-disabled";
+    card.className = `card phase-card p-3 type-${phase.type} ${disabledClass}`;
+    card.setAttribute("data-id", phase.id); // For Sortable tracking
 
     const typeSelect = createSelect(phase.type, index);
     const amountInput = createInput(
@@ -76,7 +98,12 @@ function renderPhases() {
       0.1,
     );
 
-    // Advanced Tax Settings (Only for Withdrawals)
+    // Toggle Icon (Eye)
+    const toggleIcon = phase.active ? "bi-eye-fill" : "bi-eye-slash";
+    const toggleTitle = phase.active ? "Disable Phase" : "Enable Phase";
+    const toggleClass = phase.active ? "active-phase" : "";
+
+    // Tax Logic (Only for Withdrawals)
     let taxSection = "";
     if (phase.type === "withdraw") {
       const isChecked = phase.isNet ? "checked" : "";
@@ -106,7 +133,7 @@ function renderPhases() {
                                     oninput="updatePhase(${index}, 'taxRate', this.value)">
                             </div>
                             <div class="col-auto">
-                                <span class="small text-muted">Gross amount will be adjusted.</span>
+                                <span class="small text-muted">Gross adjusted.</span>
                             </div>
                         </div>
                     </div>
@@ -115,12 +142,22 @@ function renderPhases() {
     }
 
     card.innerHTML = `
-            <div class="d-flex justify-content-between align-items-start mb-2">
-                <div class="d-flex align-items-center flex-wrap">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center flex-wrap flex-grow-1">
+                    <i class="bi bi-grip-vertical drag-handle" title="Drag to reorder"></i>
                     ${typeSelect}
                     <span class="age-badge" id="age-badge-${index}"></span>
                 </div>
-                <i class="bi bi-trash delete-btn" data-index="${index}" title="Remove this phase"></i>
+
+                <div class="d-flex align-items-center">
+                    <i class="bi ${toggleIcon} action-btn toggle-btn ${toggleClass}"
+                       onclick="togglePhase(${index})"
+                       title="${toggleTitle}"></i>
+
+                    <i class="bi bi-trash action-btn delete-btn"
+                       onclick="removePhase(${index})"
+                       title="Remove this phase"></i>
+                </div>
             </div>
 
             <div class="row g-2">
@@ -143,10 +180,6 @@ function renderPhases() {
     container.appendChild(card);
   });
 
-  document.querySelectorAll(".delete-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => removePhase(e.target.dataset.index));
-  });
-
   updateAgeLabels();
 }
 
@@ -157,13 +190,20 @@ function updateAgeLabels() {
   phases.forEach((phase, index) => {
     const badge = document.getElementById(`age-badge-${index}`);
 
+    // Only calculate age if the phase is active and start age is provided
     if (currentAge !== null && !isNaN(currentAge)) {
-      currentAge += phase.duration;
+      if (phase.active) {
+        currentAge += phase.duration;
+      }
+
       const displayAge = Number.isInteger(currentAge)
         ? currentAge
         : currentAge.toFixed(1);
       badge.innerText = `Age: ${displayAge}`;
       badge.style.display = "inline-block";
+
+      // Dim badge if inactive
+      badge.style.opacity = phase.active ? "1" : "0.5";
     } else {
       badge.style.display = "none";
     }
@@ -172,7 +212,7 @@ function updateAgeLabels() {
 
 function createSelect(currentType, index) {
   return `
-        <select class="form-select form-select-sm w-auto fw-bold" onchange="updatePhase(${index}, 'type', this.value)">
+        <select class="form-select form-select-sm w-auto fw-bold ms-2" onchange="updatePhase(${index}, 'type', this.value)">
             <option value="deposit" ${currentType === "deposit" ? "selected" : ""}>🟢 Regular Deposit</option>
             <option value="wait" ${currentType === "wait" ? "selected" : ""}>🟡 Compound Only</option>
             <option value="withdraw" ${currentType === "withdraw" ? "selected" : ""}>🔴 Withdrawal</option>
@@ -189,7 +229,7 @@ function createInput(type, value, index, field, disabled = false, step = 1) {
 
 function addPhase() {
   phases.push({
-    id: Date.now(),
+    id: "p" + Date.now(), // Unique ID for Sortable
     type: "deposit",
     amount: 500,
     duration: 5,
@@ -197,6 +237,7 @@ function addPhase() {
     rate: 6,
     isNet: false,
     taxRate: 19,
+    active: true,
   });
   renderPhases();
   calculateAndDraw();
@@ -210,6 +251,12 @@ function removePhase(index) {
   } else {
     alert("There must be at least one investment phase.");
   }
+}
+
+function togglePhase(index) {
+  phases[index].active = !phases[index].active;
+  renderPhases();
+  calculateAndDraw();
 }
 
 window.updatePhase = function (index, field, value) {
@@ -235,7 +282,6 @@ window.updatePhase = function (index, field, value) {
   } else if (field === "type") {
     renderPhases();
   } else if (field === "isNet") {
-    // Re-render to show/hide the tax input field smoothly
     renderPhases();
   }
 
@@ -260,6 +306,9 @@ function calculateData() {
   investedData.push(0);
 
   phases.forEach((phase) => {
+    // Skip inactive phases completely from calculation
+    if (!phase.active) return;
+
     const months = phase.duration * 12;
     const monthlyRate = phase.rate / 100 / 12;
 
@@ -272,10 +321,8 @@ function calculateData() {
       } else if (phase.type === "withdraw") {
         let withdrawalAmount = phase.amount;
 
-        // Gross = Net / (1 - TaxRate)
         if (phase.isNet) {
           const taxRateDecimal = phase.taxRate / 100;
-          // Prevent division by zero or negative denominator if tax is >= 100%
           if (taxRateDecimal < 1) {
             withdrawalAmount = phase.amount / (1 - taxRateDecimal);
           }
@@ -302,8 +349,8 @@ function calculateData() {
 
 function calculateAndDraw() {
   const { labels, balanceData, investedData } = calculateData();
-  const finalBalance = balanceData[balanceData.length - 1];
-  const finalInvested = investedData[investedData.length - 1];
+  const finalBalance = balanceData[balanceData.length - 1] || 0;
+  const finalInvested = investedData[investedData.length - 1] || 0;
   const finalInterest = finalBalance - finalInvested;
 
   document.getElementById("final-balance").innerText =

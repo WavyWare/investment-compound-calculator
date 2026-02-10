@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Investment Calculator</title>
+        <title>Professional Investment Calculator</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -21,7 +21,7 @@
                     <i class="bi bi-graph-up-arrow"></i> Investment Calculator
                 </h1>
                 <p class="lead text-muted">
-                    Plan your financial future with compound interest.
+                    Advanced planning: Reorder phases and simulate scenarios.
                 </p>
             </header>
 
@@ -63,8 +63,10 @@
                     </div>
 
                     <div class="alert alert-info small mt-3">
-                        <i class="bi bi-info-circle"></i> Modify values to
-                        automatically update the chart.
+                        <i class="bi bi-grip-vertical"></i> Drag items to
+                        reorder.<br />
+                        <i class="bi bi-eye"></i> Click the eye icon to
+                        enable/disable a phase.
                     </div>
                 </div>
 
@@ -146,6 +148,8 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- SortableJS for Drag and Drop -->
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
         <script src="script.js"></script>
     </body>
 </html>
