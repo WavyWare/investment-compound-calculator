@@ -27,6 +27,7 @@
             </header>
 
             <div class="row">
+                <!-- Left Column: Chart and Results -->
                 <div class="col-lg-7 mb-4">
                     <div class="row mb-4 g-2">
                         <div class="col-md-4">
@@ -101,7 +102,9 @@
                     </div>
                 </div>
 
+                <!-- Right Column: Settings (Controls) -->
                 <div class="col-lg-5 mb-4">
+                    <!-- Global Settings: Age & Initial Capital -->
                     <div class="card p-3 mb-3 bg-light border-0">
                         <div class="row g-3 align-items-center">
                             <div class="col-6">
@@ -128,11 +131,23 @@
                                         class="input-group-text bg-white text-muted"
                                         >$</span
                                     >
+                                    <!-- TYPE TEXT for formatting support -->
                                     <input
-                                        type="number"
+                                        type="text"
                                         id="initial-amount"
                                         class="form-control"
                                         placeholder="0"
+                                        onfocus="
+                                            this.value = this.value.replace(
+                                                /\s/g,
+                                                '',
+                                            )
+                                        "
+                                        onblur="
+                                            this.value = formatNumberWithSpaces(
+                                                this.value,
+                                            )
+                                        "
                                     />
                                 </div>
                             </div>

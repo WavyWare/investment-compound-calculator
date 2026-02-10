@@ -8,7 +8,6 @@ let phases = [
     rate: 12,
     isNet: false,
     taxRate: 19,
-    taxRate: 19,
     active: true,
   },
 ];
@@ -58,6 +57,15 @@ document.addEventListener("DOMContentLoaded", () => {
   calculateAndDraw();
 });
 
+// Helper for formatting spaces
+window.formatNumberWithSpaces = function (value) {
+  if (!value && value !== 0 && value !== "0") return "";
+  let clean = value.toString().replace(/\s/g, "");
+  let parts = clean.split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return parts.join(".");
+};
+
 function renderPhases() {
   const container = document.getElementById("phases-container");
   if (!container) return;
@@ -75,13 +83,15 @@ function renderPhases() {
     const isOnceType =
       phase.type === "oncedeposit" || phase.type === "oncewithdraw";
 
+    // Amount is now handled as TEXT input to support spaces
     const amountInput = createInput(
-      "number",
+      "text",
       phase.amount,
       index,
       "amount",
       phase.type === "wait",
     );
+
     const durationInput = createInput(
       "number",
       phase.duration,
@@ -242,10 +252,23 @@ function createSelect(currentType, index) {
 }
 
 function createInput(type, value, index, field, disabled = false, step = 1) {
+  let displayValue = value;
+  // If field is 'amount', we format it with spaces for display
+  if (field === "amount") {
+    displayValue = formatNumberWithSpaces(value);
+  }
+
+  // Events to handle raw value editing vs formatted display
+  const events =
+    field === "amount"
+      ? `onfocus="this.value = this.value.replace(/\\s/g, '')" onblur="this.value = formatNumberWithSpaces(this.value)"`
+      : "";
+
   return `
     <input type="${type}" class="form-control form-control-sm"
-           value="${value}" min="0" step="${step}"
+           value="${displayValue}" min="0" step="${step}"
            ${disabled ? "disabled" : ""}
+           ${events}
            oninput="updatePhase(${index}, '${field}', this.value)">
   `;
 }
@@ -311,6 +334,10 @@ window.updatePhase = function (index, field, value) {
     field === "rate" ||
     field === "taxRate"
   ) {
+    // Strip spaces before parsing
+    if (typeof value === "string") {
+      value = value.replace(/\s/g, "");
+    }
     val = parseFloat(value) || 0;
   }
 
@@ -339,7 +366,10 @@ function calculateData() {
   let investedData = [];
 
   const initialInput = document.getElementById("initial-amount");
-  const initialAmount = initialInput ? parseFloat(initialInput.value) || 0 : 0;
+  let initialValStr = initialInput ? initialInput.value : "0";
+  // Clean spaces before calculation
+  initialValStr = initialValStr.replace(/\s/g, "");
+  const initialAmount = parseFloat(initialValStr) || 0;
 
   let currentBalance = initialAmount;
   let totalInvested = initialAmount;
