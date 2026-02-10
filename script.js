@@ -29,6 +29,12 @@ let chartInstance = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("add-phase-btn").addEventListener("click", addPhase);
+
+  const ageInput = document.getElementById("start-age");
+  ageInput.addEventListener("input", () => {
+    updateAgeLabels();
+  });
+
   renderPhases();
   calculateAndDraw();
 });
@@ -66,20 +72,24 @@ function renderPhases() {
 
     card.innerHTML = `
             <div class="d-flex justify-content-between align-items-start mb-2">
-                ${typeSelect}
-                <i class="bi bi-trash delete-btn" data-index="${index}" title="Usuń ten okres"></i>
+                <div class="d-flex align-items-center flex-wrap">
+                    ${typeSelect}
+                    <span class="age-badge" id="age-badge-${index}"></span>
+                </div>
+                <i class="bi bi-trash delete-btn" data-index="${index}" title="Remove this phase"></i>
             </div>
+
             <div class="row g-2">
                 <div class="col-md-4">
-                    <label class="form-label small text-muted mb-0">Kwota (mies.)</label>
+                    <label class="form-label small text-muted mb-0">Amount (mo)</label>
                     ${amountInput}
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label small text-muted mb-0">Czas (lata)</label>
+                    <label class="form-label small text-muted mb-0">Time (yrs)</label>
                     ${durationInput}
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label small text-muted mb-0">Stopa (%)</label>
+                    <label class="form-label small text-muted mb-0">Rate (%)</label>
                     ${rateInput}
                 </div>
             </div>
@@ -90,14 +100,36 @@ function renderPhases() {
   document.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => removePhase(e.target.dataset.index));
   });
+
+  updateAgeLabels();
+}
+
+function updateAgeLabels() {
+  const startAgeInput = document.getElementById("start-age").value;
+  let currentAge = startAgeInput ? parseFloat(startAgeInput) : null;
+
+  phases.forEach((phase, index) => {
+    const badge = document.getElementById(`age-badge-${index}`);
+
+    if (currentAge !== null && !isNaN(currentAge)) {
+      currentAge += phase.duration;
+      const displayAge = Number.isInteger(currentAge)
+        ? currentAge
+        : currentAge.toFixed(1);
+      badge.innerText = `Age: ${displayAge}`;
+      badge.style.display = "inline-block";
+    } else {
+      badge.style.display = "none";
+    }
+  });
 }
 
 function createSelect(currentType, index) {
   return `
         <select class="form-select form-select-sm w-auto fw-bold" onchange="updatePhase(${index}, 'type', this.value)">
-            <option value="deposit" ${currentType === "deposit" ? "selected" : ""}>🟢 Regularne wpłaty</option>
-            <option value="wait" ${currentType === "wait" ? "selected" : ""}>🟡 Tylko procent</option>
-            <option value="withdraw" ${currentType === "withdraw" ? "selected" : ""}>🔴 Wypłaty</option>
+            <option value="deposit" ${currentType === "deposit" ? "selected" : ""}>🟢 Regular Deposit</option>
+            <option value="wait" ${currentType === "wait" ? "selected" : ""}>🟡 Compound Only</option>
+            <option value="withdraw" ${currentType === "withdraw" ? "selected" : ""}>🔴 Withdrawal</option>
         </select>
     `;
 }
@@ -128,7 +160,7 @@ function removePhase(index) {
     renderPhases();
     calculateAndDraw();
   } else {
-    alert("Musi istnieć przynajmniej jeden okres inwestycyjny.");
+    alert("There must be at least one investment phase.");
   }
 }
 
@@ -145,6 +177,10 @@ window.updatePhase = function (index, field, value) {
     renderPhases();
   } else if (field === "type") {
     renderPhases();
+  }
+
+  if (field === "duration") {
+    updateAgeLabels();
   }
 
   calculateAndDraw();
@@ -181,7 +217,7 @@ function calculateData() {
       const year = Math.floor(totalMonthsPassed / 12);
       const month = totalMonthsPassed % 12;
 
-      labels.push(`Rok ${year} Mies. ${month === 0 ? 12 : month}`);
+      labels.push(`Year ${year} Month ${month === 0 ? 12 : month}`);
       balanceData.push(currentBalance);
       investedData.push(totalInvested);
     }
@@ -219,7 +255,7 @@ function calculateAndDraw() {
       labels: labels,
       datasets: [
         {
-          label: "Wartość Inwestycji",
+          label: "Investment Value",
           data: balanceData,
           borderColor: "#0d6efd",
           backgroundColor: gradient,
@@ -230,7 +266,7 @@ function calculateAndDraw() {
           tension: 0.4,
         },
         {
-          label: "Wpłacony Kapitał (Netto)",
+          label: "Principal Capital",
           data: investedData,
           borderColor: "#adb5bd",
           borderWidth: 2,
@@ -263,7 +299,11 @@ function calculateAndDraw() {
           beginAtZero: true,
           ticks: {
             callback: function (value) {
-              return value.toLocaleString("pl-PL") + " zł";
+              return value.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0,
+              });
             },
           },
         },
@@ -301,9 +341,9 @@ function showDetails(label, balance, invested) {
 }
 
 function formatCurrency(value) {
-  return value.toLocaleString("pl-PL", {
+  return value.toLocaleString("en-US", {
     style: "currency",
-    currency: "PLN",
+    currency: "USD",
     maximumFractionDigits: 0,
   });
 }
