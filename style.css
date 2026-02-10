@@ -13,6 +13,7 @@ body {
 .phase-card {
     border-left: 5px solid #0d6efd;
     position: relative;
+    padding-bottom: 10px;
 }
 
 .phase-card.type-deposit {
@@ -34,6 +35,22 @@ body {
     font-weight: 600;
     margin-left: 10px;
     display: none;
+}
+
+/* Professional styling for the tax section */
+.tax-settings-container {
+    background-color: #fff5f5;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin-top: 15px;
+}
+
+.tax-header {
+    font-size: 0.85rem;
+    color: #dc3545;
+    font-weight: 600;
+    margin-bottom: 5px;
 }
 
 .chart-container {
