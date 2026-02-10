@@ -41,23 +41,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Listeners for global inputs
   const ageInput = document.getElementById("start-age");
-  ageInput.addEventListener("input", updateAgeLabels);
+  if (ageInput) ageInput.addEventListener("input", updateAgeLabels);
 
   const initialInput = document.getElementById("initial-amount");
-  initialInput.addEventListener("input", calculateAndDraw);
+  if (initialInput) {
+    initialInput.addEventListener("input", () => {
+      calculateAndDraw();
+    });
+  }
 
   // Initialize SortableJS
   const el = document.getElementById("phases-container");
-  Sortable.create(el, {
-    handle: ".drag-handle",
-    animation: 150,
-    onEnd: function (evt) {
-      const item = phases.splice(evt.oldIndex, 1)[0];
-      phases.splice(evt.newIndex, 0, item);
-      renderPhases();
-      calculateAndDraw();
-    },
-  });
+  if (el) {
+    Sortable.create(el, {
+      handle: ".drag-handle",
+      animation: 150,
+      onEnd: function (evt) {
+        const item = phases.splice(evt.oldIndex, 1)[0];
+        phases.splice(evt.newIndex, 0, item);
+        renderPhases();
+        calculateAndDraw();
+      },
+    });
+  }
 
   renderPhases();
   calculateAndDraw();
@@ -65,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function renderPhases() {
   const container = document.getElementById("phases-container");
+  if (!container) return;
   container.innerHTML = "";
 
   phases.forEach((phase, index) => {
@@ -180,11 +187,15 @@ function renderPhases() {
 }
 
 function updateAgeLabels() {
-  const startAgeInput = document.getElementById("start-age").value;
-  let currentAge = startAgeInput ? parseFloat(startAgeInput) : null;
+  const ageInput = document.getElementById("start-age");
+  if (!ageInput) return;
+
+  const startAgeVal = ageInput.value;
+  let currentAge = startAgeVal ? parseFloat(startAgeVal) : null;
 
   phases.forEach((phase, index) => {
     const badge = document.getElementById(`age-badge-${index}`);
+    if (!badge) return;
 
     if (currentAge !== null && !isNaN(currentAge)) {
       if (phase.active) {
@@ -286,15 +297,14 @@ function calculateData() {
   let balanceData = [];
   let investedData = [];
 
-  // Get Initial Capital
-  const initialAmount =
-    parseFloat(document.getElementById("initial-amount").value) || 0;
+  // Pobranie wartości początkowej
+  const initialInput = document.getElementById("initial-amount");
+  const initialAmount = initialInput ? parseFloat(initialInput.value) || 0 : 0;
 
   let currentBalance = initialAmount;
   let totalInvested = initialAmount;
   let totalMonthsPassed = 0;
 
-  // Start Point
   labels.push(`Start`);
   balanceData.push(currentBalance);
   investedData.push(totalInvested);
@@ -344,14 +354,17 @@ function calculateAndDraw() {
   const finalInvested = investedData[investedData.length - 1] || 0;
   const finalInterest = finalBalance - finalInvested;
 
-  document.getElementById("final-balance").innerText =
-    formatCurrency(finalBalance);
-  document.getElementById("total-invested").innerText =
-    formatCurrency(finalInvested);
-  document.getElementById("total-interest").innerText =
-    formatCurrency(finalInterest);
+  const elBal = document.getElementById("final-balance");
+  const elInv = document.getElementById("total-invested");
+  const elInt = document.getElementById("total-interest");
 
-  const ctx = document.getElementById("investmentChart").getContext("2d");
+  if (elBal) elBal.innerText = formatCurrency(finalBalance);
+  if (elInv) elInv.innerText = formatCurrency(finalInvested);
+  if (elInt) elInt.innerText = formatCurrency(finalInterest);
+
+  const ctxEl = document.getElementById("investmentChart");
+  if (!ctxEl) return;
+  const ctx = ctxEl.getContext("2d");
 
   if (chartInstance) {
     chartInstance.destroy();
@@ -441,6 +454,8 @@ function calculateAndDraw() {
 
 function showDetails(label, balance, invested) {
   const detailBox = document.getElementById("detail-info");
+  if (!detailBox) return;
+
   const profit = balance - invested;
 
   document.getElementById("detail-month").innerText = label;
