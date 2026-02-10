@@ -1,0 +1,23 @@
+{
+  "name": "investment-calculator",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/WavyWare/investment-calculator#readme",
+  "bugs": {
+    "url": "https://github.com/WavyWare/investment-calculator/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WavyWare/investment-compound-calculator.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
