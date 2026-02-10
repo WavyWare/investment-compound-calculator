@@ -27,7 +27,7 @@ body {
 .phase-card.phase-disabled .form-control,
 .phase-card.phase-disabled .form-select,
 .phase-card.phase-disabled .tax-settings-container {
-    pointer-events: none; /* Prevent editing when disabled */
+    pointer-events: none;
     background-color: #f0f0f0;
 }
 
@@ -52,7 +52,6 @@ body {
     display: none;
 }
 
-/* Drag Handle Styling */
 .drag-handle {
     cursor: grab;
     color: #adb5bd;
@@ -63,7 +62,6 @@ body {
     cursor: grabbing;
 }
 
-/* Action Buttons (Eye, Trash) */
 .action-btn {
     cursor: pointer;
     margin-left: 10px;
@@ -88,7 +86,6 @@ body {
     color: #a71d2a;
 }
 
-/* Tax Section */
 .tax-settings-container {
     background-color: #fff5f5;
     border: 1px solid #f5c6cb;

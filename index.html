@@ -21,28 +21,49 @@
                     <i class="bi bi-graph-up-arrow"></i> Investment Calculator
                 </h1>
                 <p class="lead text-muted">
-                    Advanced planning: Reorder phases and simulate scenarios.
+                    Advanced planning: Reorder phases, simulate taxes, and set
+                    starting capital.
                 </p>
             </header>
 
             <div class="row">
                 <!-- Left Column: Configuration -->
                 <div class="col-lg-5 mb-4">
-                    <!-- Age Section -->
+                    <!-- Global Settings: Age & Initial Capital -->
                     <div class="card p-3 mb-3 bg-light border-0">
-                        <div class="d-flex align-items-center">
-                            <label
-                                for="start-age"
-                                class="form-label me-3 mb-0 fw-bold text-secondary"
-                                style="white-space: nowrap"
-                                >Your Current Age:</label
-                            >
-                            <input
-                                type="number"
-                                id="start-age"
-                                class="form-control"
-                                placeholder="Optional (e.g., 30)"
-                            />
+                        <div class="row g-3 align-items-center">
+                            <div class="col-6">
+                                <label
+                                    for="start-age"
+                                    class="form-label small fw-bold text-secondary mb-1"
+                                    >Current Age</label
+                                >
+                                <input
+                                    type="number"
+                                    id="start-age"
+                                    class="form-control"
+                                    placeholder="Optional (e.g. 30)"
+                                />
+                            </div>
+                            <div class="col-6">
+                                <label
+                                    for="initial-amount"
+                                    class="form-label small fw-bold text-secondary mb-1"
+                                    >Initial Capital</label
+                                >
+                                <div class="input-group">
+                                    <span
+                                        class="input-group-text bg-white text-muted"
+                                        >$</span
+                                    >
+                                    <input
+                                        type="number"
+                                        id="initial-amount"
+                                        class="form-control"
+                                        placeholder="0"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -65,8 +86,8 @@
                     <div class="alert alert-info small mt-3">
                         <i class="bi bi-grip-vertical"></i> Drag items to
                         reorder.<br />
-                        <i class="bi bi-eye"></i> Click the eye icon to
-                        enable/disable a phase.
+                        <i class="bi bi-eye"></i> Toggle visibility to exclude
+                        phases.
                     </div>
                 </div>
 
@@ -148,7 +169,6 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <!-- SortableJS for Drag and Drop -->
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
         <script src="script.js"></script>
     </body>

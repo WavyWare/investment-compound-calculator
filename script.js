@@ -39,22 +39,21 @@ let chartInstance = null;
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("add-phase-btn").addEventListener("click", addPhase);
 
+  // Listeners for global inputs
   const ageInput = document.getElementById("start-age");
-  ageInput.addEventListener("input", () => {
-    updateAgeLabels();
-  });
+  ageInput.addEventListener("input", updateAgeLabels);
 
-  // Initialize SortableJS for Drag and Drop
+  const initialInput = document.getElementById("initial-amount");
+  initialInput.addEventListener("input", calculateAndDraw);
+
+  // Initialize SortableJS
   const el = document.getElementById("phases-container");
   Sortable.create(el, {
-    handle: ".drag-handle", // Drag handle selector
-    animation: 150, // Smooth animation
+    handle: ".drag-handle",
+    animation: 150,
     onEnd: function (evt) {
-      // Reorder array based on new index
       const item = phases.splice(evt.oldIndex, 1)[0];
       phases.splice(evt.newIndex, 0, item);
-
-      // Re-render to ensure data-indices are correct, then update charts
       renderPhases();
       calculateAndDraw();
     },
@@ -70,10 +69,9 @@ function renderPhases() {
 
   phases.forEach((phase, index) => {
     const card = document.createElement("div");
-    // Add disabled class if inactive
     const disabledClass = phase.active ? "" : "phase-disabled";
     card.className = `card phase-card p-3 type-${phase.type} ${disabledClass}`;
-    card.setAttribute("data-id", phase.id); // For Sortable tracking
+    card.setAttribute("data-id", phase.id);
 
     const typeSelect = createSelect(phase.type, index);
     const amountInput = createInput(
@@ -98,12 +96,10 @@ function renderPhases() {
       0.1,
     );
 
-    // Toggle Icon (Eye)
     const toggleIcon = phase.active ? "bi-eye-fill" : "bi-eye-slash";
     const toggleTitle = phase.active ? "Disable Phase" : "Enable Phase";
     const toggleClass = phase.active ? "active-phase" : "";
 
-    // Tax Logic (Only for Withdrawals)
     let taxSection = "";
     if (phase.type === "withdraw") {
       const isChecked = phase.isNet ? "checked" : "";
@@ -190,19 +186,15 @@ function updateAgeLabels() {
   phases.forEach((phase, index) => {
     const badge = document.getElementById(`age-badge-${index}`);
 
-    // Only calculate age if the phase is active and start age is provided
     if (currentAge !== null && !isNaN(currentAge)) {
       if (phase.active) {
         currentAge += phase.duration;
       }
-
       const displayAge = Number.isInteger(currentAge)
         ? currentAge
         : currentAge.toFixed(1);
       badge.innerText = `Age: ${displayAge}`;
       badge.style.display = "inline-block";
-
-      // Dim badge if inactive
       badge.style.opacity = phase.active ? "1" : "0.5";
     } else {
       badge.style.display = "none";
@@ -229,7 +221,7 @@ function createInput(type, value, index, field, disabled = false, step = 1) {
 
 function addPhase() {
   phases.push({
-    id: "p" + Date.now(), // Unique ID for Sortable
+    id: "p" + Date.now(),
     type: "deposit",
     amount: 500,
     duration: 5,
@@ -261,9 +253,8 @@ function togglePhase(index) {
 
 window.updatePhase = function (index, field, value) {
   let val = value;
-
   if (field === "isNet") {
-    val = value; // Boolean
+    val = value;
   } else if (
     field === "amount" ||
     field === "duration" ||
@@ -279,9 +270,7 @@ window.updatePhase = function (index, field, value) {
     phases[index].amount = 0;
     phases[index].isNet = false;
     renderPhases();
-  } else if (field === "type") {
-    renderPhases();
-  } else if (field === "isNet") {
+  } else if (field === "type" || field === "isNet") {
     renderPhases();
   }
 
@@ -297,16 +286,20 @@ function calculateData() {
   let balanceData = [];
   let investedData = [];
 
-  let currentBalance = 0;
-  let totalInvested = 0;
+  // Get Initial Capital
+  const initialAmount =
+    parseFloat(document.getElementById("initial-amount").value) || 0;
+
+  let currentBalance = initialAmount;
+  let totalInvested = initialAmount;
   let totalMonthsPassed = 0;
 
+  // Start Point
   labels.push(`Start`);
-  balanceData.push(0);
-  investedData.push(0);
+  balanceData.push(currentBalance);
+  investedData.push(totalInvested);
 
   phases.forEach((phase) => {
-    // Skip inactive phases completely from calculation
     if (!phase.active) return;
 
     const months = phase.duration * 12;
@@ -320,14 +313,12 @@ function calculateData() {
         flow = phase.amount;
       } else if (phase.type === "withdraw") {
         let withdrawalAmount = phase.amount;
-
         if (phase.isNet) {
           const taxRateDecimal = phase.taxRate / 100;
           if (taxRateDecimal < 1) {
             withdrawalAmount = phase.amount / (1 - taxRateDecimal);
           }
         }
-
         flow = -withdrawalAmount;
       }
 
