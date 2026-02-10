@@ -1,66 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Compound Calculator</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Investment Compound Calculator</h1>
-            <p class="subtitle">Plan your investment journey with multiple periods</p>
-        </header>
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Interaktywny Kalkulator Inwestycyjny</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="container py-5">
+            <header class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary">
+                    <i class="bi bi-graph-up-arrow"></i> Kalkulator Inwestycyjny
+                </h1>
+                <p class="lead text-muted">
+                    Planuj wpłaty, przerwy i wypłaty z uwzględnieniem procentu
+                    składanego.
+                </p>
+            </header>
 
-        <div class="settings-panel">
-            <h2>Initial Settings</h2>
-            <div class="form-group">
-                <label for="initial-balance">Initial Balance:</label>
-                <input type="number" id="initial-balance" value="0" min="0" step="100">
-                <span class="currency">PLN</span>
+            <div class="row">
+                <div class="col-lg-5 mb-4">
+                    <div
+                        class="d-flex justify-content-between align-items-center mb-3"
+                    >
+                        <h4 class="mb-0">Etapy inwestycji</h4>
+                        <button
+                            class="btn btn-primary btn-sm"
+                            id="add-phase-btn"
+                        >
+                            <i class="bi bi-plus-circle"></i> Dodaj okres
+                        </button>
+                    </div>
+
+                    <div id="phases-container"></div>
+
+                    <div class="alert alert-info small mt-3">
+                        <i class="bi bi-info-circle"></i> Zmieniaj wartości, aby
+                        automatycznie aktualizować wykres.
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="row mb-4 g-2">
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="text-muted small">
+                                    Wpłacono łącznie
+                                </div>
+                                <div
+                                    class="summary-value text-secondary"
+                                    id="total-invested"
+                                >
+                                    0 PLN
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="text-muted small">
+                                    Odsetki (Zysk)
+                                </div>
+                                <div
+                                    class="summary-value text-success"
+                                    id="total-interest"
+                                >
+                                    0 PLN
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="summary-box">
+                                <div class="text-muted small">
+                                    Kapitał końcowy
+                                </div>
+                                <div class="summary-value" id="final-balance">
+                                    0 PLN
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-3">
+                        <h5 class="card-title">Wzrost w czasie</h5>
+                        <div class="chart-container">
+                            <canvas id="investmentChart"></canvas>
+                        </div>
+
+                        <div id="detail-info" class="text-center">
+                            <h6 class="text-muted">
+                                Szczegóły dla wybranego miesiąca:
+                                <span id="detail-month" class="fw-bold"></span>
+                            </h6>
+                            <div class="row mt-2">
+                                <div class="col-4">
+                                    Stan konta: <br /><strong
+                                        id="detail-balance"
+                                        class="text-primary"
+                                    ></strong>
+                                </div>
+                                <div class="col-4">
+                                    Wkład własny: <br /><strong
+                                        id="detail-contribution"
+                                    ></strong>
+                                </div>
+                                <div class="col-4">
+                                    Zysk całkowity: <br /><strong
+                                        id="detail-profit"
+                                        class="text-success"
+                                    ></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="annual-rate">Annual Interest Rate:</label>
-                <input type="number" id="annual-rate" value="7" min="0" max="100" step="0.1">
-                <span class="currency">%</span>
-            </div>
         </div>
 
-        <div class="periods-panel">
-            <h2>Investment Periods</h2>
-            <div id="periods-container"></div>
-            <button id="add-period" class="btn btn-primary">+ Add Period</button>
-        </div>
-
-        <div class="actions">
-            <button id="calculate" class="btn btn-success">Calculate Investment Growth</button>
-        </div>
-
-        <div id="results" class="results-panel" style="display: none;">
-            <h2>Results</h2>
-            <div class="summary-cards">
-                <div class="summary-card">
-                    <div class="card-label">Total Contributions</div>
-                    <div class="card-value" id="total-contributions">0 PLN</div>
-                </div>
-                <div class="summary-card">
-                    <div class="card-label">Total Withdrawals</div>
-                    <div class="card-value" id="total-withdrawals">0 PLN</div>
-                </div>
-                <div class="summary-card">
-                    <div class="card-label">Total Interest Earned</div>
-                    <div class="card-value" id="total-interest">0 PLN</div>
-                </div>
-                <div class="summary-card highlight">
-                    <div class="card-label">Final Balance</div>
-                    <div class="card-value" id="final-balance">0 PLN</div>
-                </div>
-            </div>
-            <div class="timeline" id="timeline"></div>
-        </div>
-    </div>
-
-    <script src="calculator.js"></script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="script.js"></script>
+    </body>
 </html>

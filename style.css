@@ -1,0 +1,62 @@
+body {
+    background-color: #f8f9fa;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+}
+
+.phase-card {
+    border-left: 5px solid #0d6efd;
+}
+
+.phase-card.type-deposit {
+    border-left-color: #198754;
+}
+.phase-card.type-wait {
+    border-left-color: #ffc107;
+}
+.phase-card.type-withdraw {
+    border-left-color: #dc3545;
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
+
+.summary-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.delete-btn {
+    cursor: pointer;
+    color: #dc3545;
+    transition: color 0.2s;
+}
+
+.delete-btn:hover {
+    color: #a71d2a;
+}
+
+#detail-info {
+    display: none;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    padding-top: 20px;
+}
