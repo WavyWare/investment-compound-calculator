@@ -1,45 +1,107 @@
-body {
-    background-color: #f8f9fa;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+:root {
+    --bg-body: #f8f9fa;
+    --bg-card: #ffffff;
+    --text-color: #212529;
+    --text-muted: #6c757d;
+    --border-color: #dee2e6;
+    --input-bg: #fff;
+    --input-border: #ced4da;
+    --input-text: #212529;
+    --bs-primary: #0d6efd;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
+
+/* Ensure placeholders are visible in dark mode */
+::placeholder {
+    color: #adb5bd !important;
+    opacity: 1;
+    /* Firefox */
+}
+
+[data-theme="dark"] ::placeholder {
+    color: #888 !important;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+    /* Helps with native UI elements like spinners */
+    --bg-body: #121212;
+    --bg-card: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-muted: #adb5bd;
+    --border-color: #2c2c2c;
+    --input-bg: #2c2c2c;
+    --input-border: #444;
+    --input-text: #e0e0e0;
+    --bs-primary: #3d8bfd;
+    /* Slightly lighter for dark mode */
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-color);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .card {
     border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow);
     margin-bottom: 20px;
     transition: all 0.2s;
+    background-color: var(--bg-card);
+    color: var(--text-color);
 }
+
 .phase-card {
-    border-left: 5px solid #0d6efd;
+    border-left: 5px solid var(--bs-primary);
     position: relative;
     padding-bottom: 10px;
-    background-color: #fff;
 }
+
 .phase-card.phase-disabled {
     border-left-color: #ccc !important;
     opacity: 0.6;
-    background-color: #fdfdfd;
+    background-color: rgba(0, 0, 0, 0.05);
 }
+
+[data-theme="dark"] .phase-card.phase-disabled {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left-color: #555 !important;
+}
+
 .phase-card.phase-disabled .form-control,
 .phase-card.phase-disabled .form-select,
 .phase-card.phase-disabled .tax-settings-container {
     pointer-events: none;
-    background-color: #f0f0f0;
+    background-color: transparent;
+    /* simple workaround */
 }
+
 .phase-card.type-deposit {
     border-left-color: #198754;
 }
+
 .phase-card.type-wait {
     border-left-color: #ffc107;
 }
+
 .phase-card.type-withdraw {
     border-left-color: #dc3545;
 }
+
 .phase-card.type-oncedeposit {
     border-left-color: #20c997;
 }
+
 .phase-card.type-oncewithdraw {
     border-left-color: #fd7e14;
 }
+
 .age-badge {
     font-size: 0.85rem;
     background-color: #e9ecef;
@@ -50,36 +112,50 @@ body {
     margin-left: 10px;
     display: none;
 }
+
+[data-theme="dark"] .age-badge {
+    background-color: #333;
+    color: #ddd;
+}
+
 .drag-handle {
     cursor: grab;
     color: #adb5bd;
     padding: 0 10px 0 0;
     font-size: 1.2rem;
 }
+
 .drag-handle:active {
     cursor: grabbing;
 }
+
 .action-btn {
     cursor: pointer;
     margin-left: 10px;
     font-size: 1.1rem;
     transition: color 0.2s;
 }
+
 .toggle-btn {
     color: #6c757d;
 }
+
 .toggle-btn:hover {
-    color: #0d6efd;
+    color: var(--bs-primary);
 }
+
 .toggle-btn.active-phase {
     color: #198754;
 }
+
 .delete-btn {
     color: #dc3545;
 }
+
 .delete-btn:hover {
     color: #a71d2a;
 }
+
 .tax-settings-container {
     background-color: #fff5f5;
     border: 1px solid #f5c6cb;
@@ -87,29 +163,89 @@ body {
     padding: 10px 15px;
     margin-top: 15px;
 }
+
+[data-theme="dark"] .tax-settings-container {
+    background-color: #2c0b0e;
+    border-color: #842029;
+}
+
 .chart-container {
     position: relative;
     height: 400px;
     width: 100%;
 }
+
 .summary-box {
-    background: white;
+    background: var(--bg-card);
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
 .summary-value {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #0d6efd;
+    color: var(--bs-primary);
 }
+
 #detail-info {
     display: none;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-color);
     margin-top: 20px;
     padding-top: 20px;
 }
+
 .app-footer {
-    background: #fff;
+    background: var(--bg-card);
+    color: var(--text-muted);
+    margin-top: auto !important;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
+}
+
+/* Form controls adaptive */
+.form-control,
+.form-select {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--input-text);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--bs-primary);
+}
+
+/* Common text overrides */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-color);
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Override BS utility */
+.bg-light {
+    background-color: var(--bg-card) !important;
+}
+
+/* Input Group Addon (The $ sign) */
+.input-group-text {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border);
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .input-group-text {
+    color: var(--text-color);
 }

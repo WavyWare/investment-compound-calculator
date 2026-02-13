@@ -1,231 +1,60 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Professional Investment Calculator</title>
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-        />
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        />
-        <link rel="stylesheet" href="style.css?v=2" />
-    </head>
-    <body>
-        <div class="container py-5">
-            <header class="text-center mb-5">
-                <h1 class="display-5 fw-bold text-primary">
-                    <i class="bi bi-graph-up-arrow"></i> Investment Calculator
-                </h1>
-                <p class="lead text-muted">
-                    Advanced planning: Reorder phases, simulate taxes, and set
-                    starting capital.
-                </p>
-            </header>
 
-            <div class="row">
-                <!-- Left Column: Chart and Results -->
-                <div class="col-lg-7 mb-4">
-                    <div class="row mb-4 g-2">
-                        <div class="col-md-4">
-                            <div class="summary-box">
-                                <div class="text-muted small">
-                                    Total Invested
-                                </div>
-                                <div
-                                    class="summary-value text-secondary"
-                                    id="total-invested"
-                                >
-                                    $0
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="summary-box">
-                                <div class="text-muted small">
-                                    Total Interest
-                                </div>
-                                <div
-                                    class="summary-value text-success"
-                                    id="total-interest"
-                                >
-                                    $0
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="summary-box">
-                                <div class="text-muted small">
-                                    Final Balance
-                                </div>
-                                <div class="summary-value" id="final-balance">
-                                    $0
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Professional Investment Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="style.css?v=2" />
+</head>
 
-                    <div class="card p-3">
-                        <h5 class="card-title">Growth Over Time</h5>
-                        <div class="chart-container">
-                            <canvas id="investmentChart"></canvas>
-                        </div>
-
-                        <div id="detail-info" class="text-center">
-                            <h6 class="text-muted">
-                                Details for:
-                                <span id="detail-month" class="fw-bold"></span>
-                            </h6>
-                            <div class="row mt-2">
-                                <div class="col-4">
-                                    Balance: <br /><strong
-                                        id="detail-balance"
-                                        class="text-primary"
-                                    ></strong>
-                                </div>
-                                <div class="col-4">
-                                    Principal: <br /><strong
-                                        id="detail-contribution"
-                                    ></strong>
-                                </div>
-                                <div class="col-4">
-                                    Total Profit: <br /><strong
-                                        id="detail-profit"
-                                        class="text-success"
-                                    ></strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column: Settings (Controls) -->
-                <div class="col-lg-5 mb-4">
-                    <!-- Global Settings: Age & Initial Capital -->
-                    <div class="card p-3 mb-3 bg-light border-0">
-                        <div class="row g-3 align-items-center">
-                            <div class="col-6">
-                                <label
-                                    for="start-age"
-                                    class="form-label small fw-bold text-secondary mb-1"
-                                    >Current Age</label
-                                >
-                                <input
-                                    type="number"
-                                    id="start-age"
-                                    class="form-control"
-                                    placeholder="Optional (e.g. 30)"
-                                />
-                            </div>
-                            <div class="col-6">
-                                <label
-                                    for="initial-amount"
-                                    class="form-label small fw-bold text-secondary mb-1"
-                                    >Initial Capital</label
-                                >
-                                <div class="input-group">
-                                    <span
-                                        class="input-group-text bg-white text-muted"
-                                        >$</span
-                                    >
-                                    <!-- TYPE TEXT for formatting support -->
-                                    <input
-                                        type="text"
-                                        id="initial-amount"
-                                        class="form-control"
-                                        placeholder="0"
-                                        onfocus="
-                                            this.value = this.value.replace(
-                                                /\s/g,
-                                                '',
-                                            )
-                                        "
-                                        onblur="
-                                            this.value = formatNumberWithSpaces(
-                                                this.value,
-                                            )
-                                        "
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-3"
-                    >
-                        <h4 class="mb-0">Investment Phases</h4>
-
-                        <div class="btn-group">
-                            <button
-                                class="btn btn-primary btn-sm"
-                                id="add-phase-btn"
-                            >
-                                <i class="bi bi-plus-circle"></i> Add Phase
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <span class="visually-hidden"
-                                    >Toggle Dropdown</span
-                                >
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <button
-                                        class="dropdown-item"
-                                        id="add-once-deposit-btn"
-                                    >
-                                        ➕ One-time deposit
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        class="dropdown-item"
-                                        id="add-once-withdraw-btn"
-                                    >
-                                        ➖ One-time withdrawal
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div id="phases-container"></div>
-
-                    <div class="alert alert-info small mt-3">
-                        <i class="bi bi-grip-vertical"></i> Drag items to
-                        reorder.<br />
-                        <i class="bi bi-eye"></i> Toggle visibility to exclude
-                        phases.
-                    </div>
-                </div>
+<body>
+    <div class="container py-5 position-relative">
+        <button id="theme-toggle"
+            class="btn btn-outline-secondary position-absolute top-0 end-0 mt-4 me-3 rounded-circle"
+            style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-moon-stars-fill"></i>
+        </button>
+        <header class="text-center mb-4">
+            <h1 class="display-5 fw-bold text-primary">
+                <i class="bi bi-graph-up-arrow"></i> Investment Calculator
+            </h1>
+            <p class="lead text-muted mb-3">
+                Advanced planning: Reorder phases, simulate taxes, and set starting capital.
+            </p>
+            <div class="d-inline-block">
+                <input type="checkbox" class="btn-check" id="compare-mode-toggle" autocomplete="off">
+                <label class="btn btn-outline-primary" for="compare-mode-toggle">
+                    <i class="bi bi-columns-gap"></i> Compare Scenarios
+                </label>
             </div>
+        </header>
+
+        <div id="app-content">
+            <!-- Content will be dynamically injected here by js/ui.js -->
         </div>
+    </div>
 
-        <footer class="app-footer border-top mt-5 pt-4 pb-4">
-            <div class="container text-center small text-muted">
-                Made by <strong>WavyWare</strong> ·
-                <a
-                    class="link-secondary text-decoration-none"
-                    href="https://github.com/WavyWare"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <i class="bi bi-github"></i> github.com/WavyWare
-                </a>
-            </div>
-        </footer>
+    <footer class="app-footer border-top mt-5 pt-4 pb-4">
+        <div class="container text-center small text-muted">
+            Made by <strong>WavyWare</strong> ·
+            <a class="link-secondary text-decoration-none" href="https://github.com/WavyWare" target="_blank"
+                rel="noopener noreferrer">
+                <i class="bi bi-github"></i> github.com/WavyWare
+            </a>
+        </div>
+    </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="script.js?v=3"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Modules -->
+    <script src="script.js"></script>
+</body>
+
 </html>
